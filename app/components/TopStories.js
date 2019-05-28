@@ -1,48 +1,34 @@
-import React from 'react'
-import { fetchPopularPosts, fetchPost } from '../utils/api'
+import React from 'react';
+import { fetchPopularPosts, fetchPost } from '../utils/api';
+
 
 export default class TopStories extends React.Component {
-    state = {
-        stories: [],
-        storyStore: {}
-    }
+  state = {
+    ids: [],
+    posts: []
+  };
 
-    componentDidMount() {
-        const { stories, storyStore } = this.state;
+  componentDidMount() {
+    const { ids, posts } = this.state;
 
-        fetchPopularPosts()
-            .then(data => {
-                this.setState({
-                    stories: data
-                })
-            })
-    }
+    fetchPopularPosts()
+      .then(data => {
+        Promise.all(data.slice(0, 50).map(id => fetchPost(id))).then((allResponses) => this.setState({
+            posts: allResponses
+        }))
+      })
+      
+  }
 
-    render() {
-        const { stories, storyStore } = this.state;
-        /*
-        stories.forEach(story => {
-            fetchPost(story).then(data => {
-                this.setState(({storyStore}) => ({
-                    ...storyStore,
-                    story: data
-                }))
-            })
-        })
-        */
-        console.log(storyStore)
-        return(
-            <React.Fragment>
-            <ul>
-                {stories.map((story) => {
-                    return (
-                        <li key={story}>hello world</li>
-                    )
-                })}
-            </ul>
-            </React.Fragment>
-        )
-    }
-
-    
+  render() {
+    const { ids, posts } = this.state;
+    console.log(posts)
+    return (
+      <React.Fragment>
+        <ul>hello</ul>
+      </React.Fragment>
+    );
+  }
 }
+
+
